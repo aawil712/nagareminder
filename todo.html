@@ -4,13 +4,104 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="animations.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <title>NagaReminder - To-Do List</title>
   <style>
     body {
-      background-image: url('assets/To do list.png');
+      background-image: url('assets/todolist.jpg');
       background-size: cover;
       background-position: center;
+      height: 600px;
+      width: 600px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .container {
+      padding: 60px 20px 20px 20px;
+      height: 600px;
+    }
+    
+    h1 {
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+    
+    .todo-container {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+    
+    .todo-form {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    
+    .todo-input {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #9966cc;
+      border-radius: 5px 0 0 5px;
+      font-size: 16px;
+      font-family: 'Press Start 2P', cursive;
+    }
+    
+    .add-btn {
+      background-color: #9966cc;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .todo-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      max-height: 350px;
+      overflow-y: auto;
+    }
+    
+    .todo-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 2px solid #eee;
+      font-size: 16px;
+    }
+    
+    .todo-checkbox {
+      transform: scale(1.5);
+      margin-right: 15px;
+    }
+    
+    .todo-text {
+      flex: 1;
+      margin-left: 10px;
+      font-size: 16px;
+    }
+    
+    .delete-btn {
+      background-color: #ff6666;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+    
+    .completed {
+      text-decoration: line-through;
+      color: #999;
     }
   </style>
 </head>
@@ -20,12 +111,12 @@
     
     <div class="todo-container">
       <form id="todo-form" class="todo-form">
-        <input type="text" id="todo-input" class="todo-input" placeholder="Add a new task...">
-        <button type="submit" class="add-btn">Add</button>
+        <input type="text" id="todo-input" class="todo-input" placeholder="Add a new task..." required>
+        <button type="submit" class="add-btn">ADD</button>
       </form>
       
       <ul id="todo-list" class="todo-list">
-        <!-- Todo items will be added here -->
+        <!-- Todo items will be added here dynamically -->
       </ul>
     </div>
   </div>
@@ -39,33 +130,36 @@
     const todoInput = document.getElementById('todo-input');
     const todoList = document.getElementById('todo-list');
     
-    // Load todos from storage
+    // Get todos from storage
     let todos = ipcRenderer.sendSync('get-todos');
     
     // Render todos
     function renderTodos() {
       todoList.innerHTML = '';
+      
       todos.forEach((todo, index) => {
         const li = document.createElement('li');
         li.className = 'todo-item';
         
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
+        checkbox.className = 'todo-checkbox';
         checkbox.checked = todo.completed;
         checkbox.addEventListener('change', () => toggleTodo(index));
         
-        const span = document.createElement('span');
-        span.className = `todo-text ${todo.completed ? 'completed' : ''}`;
-        span.textContent = todo.text;
+        const todoText = document.createElement('span');
+        todoText.className = `todo-text ${todo.completed ? 'completed' : ''}`;
+        todoText.textContent = todo.text;
         
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
-        deleteBtn.textContent = 'Delete';
+        deleteBtn.textContent = 'DELETE';
         deleteBtn.addEventListener('click', () => deleteTodo(index));
         
         li.appendChild(checkbox);
-        li.appendChild(span);
+        li.appendChild(todoText);
         li.appendChild(deleteBtn);
+        
         todoList.appendChild(li);
       });
     }
@@ -73,22 +167,27 @@
     // Add new todo
     function addTodo(text) {
       todos.push({ text, completed: false });
-      ipcRenderer.send('save-todos', todos);
+      saveTodos();
       renderTodos();
     }
     
-    // Toggle todo completion status
+    // Toggle todo completion
     function toggleTodo(index) {
       todos[index].completed = !todos[index].completed;
-      ipcRenderer.send('save-todos', todos);
+      saveTodos();
       renderTodos();
     }
     
     // Delete todo
     function deleteTodo(index) {
       todos.splice(index, 1);
-      ipcRenderer.send('save-todos', todos);
+      saveTodos();
       renderTodos();
+    }
+    
+    // Save todos to storage
+    function saveTodos() {
+      ipcRenderer.send('save-todos', todos);
     }
     
     // Event listeners

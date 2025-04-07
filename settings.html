@@ -4,13 +4,78 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="animations.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <title>NagaReminder - Settings</title>
   <style>
     body {
-      background-image: url('assets/Settings.png');
+      background-image: url('assets/settings.gif');
       background-size: cover;
       background-position: center;
+      height: 600px;
+      width: 600px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .container {
+      padding: 60px 20px 20px 20px;
+      height: 600px;
+    }
+    
+    h1 {
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+    
+    .settings-container {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 25px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .settings-group {
+      margin-bottom: 25px;
+      text-align: left;
+    }
+    
+    .settings-group h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #9966cc;
+      padding-bottom: 10px;
+    }
+    
+    .settings-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .settings-label {
+      font-size: 14px;
+    }
+    
+    .settings-input {
+      width: 80px;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+    }
+    
+    .settings-checkbox {
+      transform: scale(1.5);
+    }
+    
+    .save-btn {
+      font-size: 16px;
+      padding: 12px 25px;
+      margin-top: 20px;
+      min-width: 150px;
     }
   </style>
 </head>
@@ -19,37 +84,41 @@
     <h1>SETTINGS</h1>
     
     <div class="settings-container">
-      <form id="settings-form" class="settings-form">
+      <form id="settings-form">
         <div class="settings-group">
-          <label for="pomodoro">Pomodoro Duration (minutes)</label>
-          <input type="number" id="pomodoro" min="1" max="60" value="25">
+          <h2>Timer Settings</h2>
+          
+          <div class="settings-row">
+            <label class="settings-label">Pomodoro (minutes):</label>
+            <input type="number" id="pomodoro" class="settings-input" min="1" max="60">
+          </div>
+          
+          <div class="settings-row">
+            <label class="settings-label">Short Break (minutes):</label>
+            <input type="number" id="short-break" class="settings-input" min="1" max="30">
+          </div>
+          
+          <div class="settings-row">
+            <label class="settings-label">Long Break (minutes):</label>
+            <input type="number" id="long-break" class="settings-input" min="1" max="60">
+          </div>
         </div>
         
         <div class="settings-group">
-          <label for="short-break">Short Break Duration (minutes)</label>
-          <input type="number" id="short-break" min="1" max="30" value="5">
+          <h2>Auto Start</h2>
+          
+          <div class="settings-row">
+            <label class="settings-label">Auto-start Breaks:</label>
+            <input type="checkbox" id="auto-start-breaks" class="settings-checkbox">
+          </div>
+          
+          <div class="settings-row">
+            <label class="settings-label">Auto-start Pomodoros:</label>
+            <input type="checkbox" id="auto-start-pomodoros" class="settings-checkbox">
+          </div>
         </div>
         
-        <div class="settings-group">
-          <label for="long-break">Long Break Duration (minutes)</label>
-          <input type="number" id="long-break" min="1" max="60" value="15">
-        </div>
-        
-        <div class="settings-group">
-          <label>
-            <input type="checkbox" id="auto-start-breaks">
-            Auto-start Breaks
-          </label>
-        </div>
-        
-        <div class="settings-group">
-          <label>
-            <input type="checkbox" id="auto-start-pomodoros">
-            Auto-start Pomodoros
-          </label>
-        </div>
-        
-        <button type="submit" class="save-btn">Save Settings</button>
+        <button type="submit" class="pixel-btn save-btn">SAVE SETTINGS</button>
       </form>
     </div>
   </div>
@@ -63,8 +132,8 @@
     const pomodoroInput = document.getElementById('pomodoro');
     const shortBreakInput = document.getElementById('short-break');
     const longBreakInput = document.getElementById('long-break');
-    const autoStartBreaksCheckbox = document.getElementById('auto-start-breaks');
-    const autoStartPomodorosCheckbox = document.getElementById('auto-start-pomodoros');
+    const autoStartBreaksCheck = document.getElementById('auto-start-breaks');
+    const autoStartPomodorosCheck = document.getElementById('auto-start-pomodoros');
     
     // Load settings from storage
     const settings = ipcRenderer.sendSync('get-timer-settings');
@@ -73,8 +142,8 @@
     pomodoroInput.value = settings.pomodoro;
     shortBreakInput.value = settings.shortBreak;
     longBreakInput.value = settings.longBreak;
-    autoStartBreaksCheckbox.checked = settings.autoStartBreaks;
-    autoStartPomodorosCheckbox.checked = settings.autoStartPomodoros;
+    autoStartBreaksCheck.checked = settings.autoStartBreaks;
+    autoStartPomodorosCheck.checked = settings.autoStartPomodoros;
     
     // Save settings
     settingsForm.addEventListener('submit', (e) => {
@@ -84,29 +153,14 @@
         pomodoro: parseInt(pomodoroInput.value, 10),
         shortBreak: parseInt(shortBreakInput.value, 10),
         longBreak: parseInt(longBreakInput.value, 10),
-        autoStartBreaks: autoStartBreaksCheckbox.checked,
-        autoStartPomodoros: autoStartPomodorosCheckbox.checked
+        autoStartBreaks: autoStartBreaksCheck.checked,
+        autoStartPomodoros: autoStartPomodorosCheck.checked
       };
       
       ipcRenderer.send('save-timer-settings', newSettings);
       
-      // Show saved notification
-      const notification = document.createElement('div');
-      notification.textContent = 'Settings saved!';
-      notification.style.position = 'fixed';
-      notification.style.bottom = '20px';
-      notification.style.left = '50%';
-      notification.style.transform = 'translateX(-50%)';
-      notification.style.backgroundColor = 'rgba(76, 175, 80, 0.9)';
-      notification.style.color = 'white';
-      notification.style.padding = '10px 20px';
-      notification.style.borderRadius = '5px';
-      
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.remove();
-      }, 2000);
+      // Show confirmation (could be improved with a proper toast notification)
+      alert('Settings saved!');
     });
   </script>
 </body>

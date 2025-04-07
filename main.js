@@ -9,11 +9,12 @@ let splashWindow;
 
 function createSplashWindow() {
   splashWindow = new BrowserWindow({
-    width: 500,
-    height: 300,
+    width: 600,
+    height: 600,
     transparent: true,
     frame: false,
     alwaysOnTop: true,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -29,11 +30,14 @@ function createSplashWindow() {
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 700,
-    minWidth: 800,
+    width: 600,
+    height: 600,
+    minWidth: 600,
     minHeight: 600,
+    maxWidth: 600,
+    maxHeight: 600,
     show: false,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false

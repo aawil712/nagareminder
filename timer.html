@@ -4,21 +4,151 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="animations.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <title>NagaReminder - Timer</title>
   <style>
     body {
-      background-image: url('assets/Timer.png');
+      background-image: url('assets/timer.jpg');
       background-size: cover;
       background-position: center;
+      height: 600px;
+      width: 600px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .container {
+      padding: 60px 15px 15px 15px;
+      height: 600px;
+    }
+    
+    h1 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      color: #ff69b4;
+      text-shadow: 3px 3px 0px #8a2be2;
+    }
+    
+    .timer-container {
+      background-color: rgba(255, 192, 203, 0.85);
+      border: 6px solid #ff69b4;
+      border-radius: 0;
+      box-shadow: 8px 8px 0 rgba(138, 43, 226, 0.5);
+      padding: 25px;
+      width: 80%;
+      margin: 0 auto;
+      image-rendering: pixelated;
+    }
+    
+    .timer-display {
+      font-size: 64px;
+      margin: 25px 0;
+      color: #fff;
+      text-shadow: 4px 4px 0 #8a2be2;
+      text-align: center;
+      letter-spacing: 5px;
+    }
+    
+    .mode-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+    
+    .mode-btn {
+      background-color: #fff;
+      color: #ff69b4;
+      border: 3px solid #ff69b4;
+      border-radius: 0;
+      font-size: 12px;
+      padding: 10px;
+      cursor: pointer;
+      image-rendering: pixelated;
+    }
+    
+    .mode-btn.active {
+      background-color: #ff69b4;
+      color: #fff;
+      border: 3px solid #8a2be2;
+    }
+    
+    .timer-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .pixel-btn {
+      background-color: #fff;
+      color: #ff69b4;
+      border: 4px solid #ff69b4;
+      box-shadow: 4px 4px 0 #8a2be2;
+      padding: 12px 10px;
+      font-size: 16px;
+      border-radius: 0;
+      cursor: pointer;
+      image-rendering: pixelated;
+      position: relative;
+      transition: all 0.1s;
+    }
+    
+    .pixel-btn:hover {
+      background-color: #ffecf1;
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #8a2be2;
+    }
+    
+    .pixel-btn:active {
+      transform: translate(3px, 3px);
+      box-shadow: 1px 1px 0 #8a2be2;
+    }
+    
+    .pixel-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .heart-icon {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background-color: #ff69b4;
+      position: relative;
+      transform: rotate(45deg);
+      margin: 20px auto;
+    }
+    
+    .heart-icon:before,
+    .heart-icon:after {
+      content: "";
+      width: 30px;
+      height: 30px;
+      background-color: #ff69b4;
+      border-radius: 50%;
+      position: absolute;
+    }
+    
+    .heart-icon:before {
+      top: -15px;
+      left: 0;
+    }
+    
+    .heart-icon:after {
+      top: 0;
+      left: -15px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>TIMER</h1>
+    <h1>START TIMER?</h1>
     
-    <div class="timer-container">
+    <div class="timer-container pixel-border">
+      <div class="scanlines"></div>
       <div class="mode-buttons">
         <button class="mode-btn active" id="pomodoro-btn">Pomodoro</button>
         <button class="mode-btn" id="short-break-btn">Short Break</button>
@@ -27,10 +157,12 @@
       
       <div class="timer-display" id="timer-display">25:00</div>
       
+      <div class="heart-icon heart-beat"></div>
+      
       <div class="timer-buttons">
-        <button class="pixel-btn" id="start-btn">Start</button>
-        <button class="pixel-btn" id="pause-btn" disabled>Pause</button>
-        <button class="pixel-btn" id="reset-btn">Reset</button>
+        <button class="pixel-btn pink-btn" id="start-btn">START</button>
+        <button class="pixel-btn pink-btn" id="pause-btn" disabled>PAUSE</button>
+        <button class="pixel-btn pink-btn" id="reset-btn">RESET</button>
       </div>
     </div>
   </div>
@@ -100,12 +232,18 @@
       startBtn.disabled = true;
       pauseBtn.disabled = false;
       
+      // Add active animation class to timer display
+      timerDisplay.classList.add('timer-active');
+      
       timer = setInterval(() => {
         if (timeLeft <= 0) {
           clearInterval(timer);
           
           // Play notification sound using Web Audio API
           createNotificationSound();
+          
+          // Remove active animation class
+          timerDisplay.classList.remove('timer-active');
           
           // Auto-start next session if enabled
           if (currentMode === 'pomodoro' && settings.autoStartBreaks) {
@@ -134,11 +272,17 @@
       isRunning = false;
       startBtn.disabled = false;
       pauseBtn.disabled = true;
+      
+      // Remove active animation class
+      timerDisplay.classList.remove('timer-active');
     }
     
     // Reset timer
     function resetTimer() {
       initTimer(currentMode);
+      
+      // Remove active animation class
+      timerDisplay.classList.remove('timer-active');
     }
     
     // Event listeners
