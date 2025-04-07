@@ -1,0 +1,39 @@
+{
+  "name": "nagareminder",
+  "version": "1.0.0",
+  "description": "Anime-inspired productivity app for students",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.2.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0"
+  },
+  "build": {
+    "appId": "com.nagareminder.app",
+    "productName": "NagaReminder",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/Logo.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/Logo.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/Logo.png"
+    }
+  }
+} 

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <title>NagaReminder - Settings</title>
+  <style>
+    body {
+      background-image: url('assets/Settings.png');
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SETTINGS</h1>
+    
+    <div class="settings-container">
+      <form id="settings-form" class="settings-form">
+        <div class="settings-group">
+          <label for="pomodoro">Pomodoro Duration (minutes)</label>
+          <input type="number" id="pomodoro" min="1" max="60" value="25">
+        </div>
+        
+        <div class="settings-group">
+          <label for="short-break">Short Break Duration (minutes)</label>
+          <input type="number" id="short-break" min="1" max="30" value="5">
+        </div>
+        
+        <div class="settings-group">
+          <label for="long-break">Long Break Duration (minutes)</label>
+          <input type="number" id="long-break" min="1" max="60" value="15">
+        </div>
+        
+        <div class="settings-group">
+          <label>
+            <input type="checkbox" id="auto-start-breaks">
+            Auto-start Breaks
+          </label>
+        </div>
+        
+        <div class="settings-group">
+          <label>
+            <input type="checkbox" id="auto-start-pomodoros">
+            Auto-start Pomodoros
+          </label>
+        </div>
+        
+        <button type="submit" class="save-btn">Save Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const { ipcRenderer } = require('electron');
+    
+    // DOM elements
+    const settingsForm = document.getElementById('settings-form');
+    const pomodoroInput = document.getElementById('pomodoro');
+    const shortBreakInput = document.getElementById('short-break');
+    const longBreakInput = document.getElementById('long-break');
+    const autoStartBreaksCheckbox = document.getElementById('auto-start-breaks');
+    const autoStartPomodorosCheckbox = document.getElementById('auto-start-pomodoros');
+    
+    // Load settings from storage
+    const settings = ipcRenderer.sendSync('get-timer-settings');
+    
+    // Set form values from settings
+    pomodoroInput.value = settings.pomodoro;
+    shortBreakInput.value = settings.shortBreak;
+    longBreakInput.value = settings.longBreak;
+    autoStartBreaksCheckbox.checked = settings.autoStartBreaks;
+    autoStartPomodorosCheckbox.checked = settings.autoStartPomodoros;
+    
+    // Save settings
+    settingsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const newSettings = {
+        pomodoro: parseInt(pomodoroInput.value, 10),
+        shortBreak: parseInt(shortBreakInput.value, 10),
+        longBreak: parseInt(longBreakInput.value, 10),
+        autoStartBreaks: autoStartBreaksCheckbox.checked,
+        autoStartPomodoros: autoStartPomodorosCheckbox.checked
+      };
+      
+      ipcRenderer.send('save-timer-settings', newSettings);
+      
+      // Show saved notification
+      const notification = document.createElement('div');
+      notification.textContent = 'Settings saved!';
+      notification.style.position = 'fixed';
+      notification.style.bottom = '20px';
+      notification.style.left = '50%';
+      notification.style.transform = 'translateX(-50%)';
+      notification.style.backgroundColor = 'rgba(76, 175, 80, 0.9)';
+      notification.style.color = 'white';
+      notification.style.padding = '10px 20px';
+      notification.style.borderRadius = '5px';
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 2000);
+    });
+  </script>
+</body>
+</html> 

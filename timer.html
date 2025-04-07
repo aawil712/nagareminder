@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <title>NagaReminder - Timer</title>
+  <style>
+    body {
+      background-image: url('assets/Timer.png');
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TIMER</h1>
+    
+    <div class="timer-container">
+      <div class="mode-buttons">
+        <button class="mode-btn active" id="pomodoro-btn">Pomodoro</button>
+        <button class="mode-btn" id="short-break-btn">Short Break</button>
+        <button class="mode-btn" id="long-break-btn">Long Break</button>
+      </div>
+      
+      <div class="timer-display" id="timer-display">25:00</div>
+      
+      <div class="timer-buttons">
+        <button class="pixel-btn" id="start-btn">Start</button>
+        <button class="pixel-btn" id="pause-btn" disabled>Pause</button>
+        <button class="pixel-btn" id="reset-btn">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const { ipcRenderer } = require('electron');
+    const { createNotificationSound } = require('./assets/notification.js');
+    
+    // DOM elements
+    const timerDisplay = document.getElementById('timer-display');
+    const pomodoroBtn = document.getElementById('pomodoro-btn');
+    const shortBreakBtn = document.getElementById('short-break-btn');
+    const longBreakBtn = document.getElementById('long-break-btn');
+    const startBtn = document.getElementById('start-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    
+    // Timer variables
+    let timer;
+    let timeLeft;
+    let isRunning = false;
+    let currentMode = 'pomodoro';
+    
+    // Get settings from storage
+    const settings = ipcRenderer.sendSync('get-timer-settings');
+    
+    // Mode durations in minutes
+    const modes = {
+      pomodoro: settings.pomodoro,
+      shortBreak: settings.shortBreak,
+      longBreak: settings.longBreak
+    };
+    
+    // Initialize timer
+    function initTimer(mode) {
+      clearInterval(timer);
+      currentMode = mode;
+      timeLeft = modes[mode] * 60;
+      updateDisplay();
+      
+      // Update active button
+      document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`${mode}-btn`).classList.add('active');
+      
+      // Reset controls
+      isRunning = false;
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+    }
+    
+    // Update timer display
+    function updateDisplay() {
+      const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+      const seconds = (timeLeft % 60).toString().padStart(2, '0');
+      timerDisplay.textContent = `${minutes}:${seconds}`;
+      
+      // Update document title
+      document.title = `${minutes}:${seconds} - NagaReminder`;
+    }
+    
+    // Start timer
+    function startTimer() {
+      if (isRunning) return;
+      
+      isRunning = true;
+      startBtn.disabled = true;
+      pauseBtn.disabled = false;
+      
+      timer = setInterval(() => {
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          
+          // Play notification sound using Web Audio API
+          createNotificationSound();
+          
+          // Auto-start next session if enabled
+          if (currentMode === 'pomodoro' && settings.autoStartBreaks) {
+            initTimer('shortBreak');
+            startTimer();
+          } else if ((currentMode === 'shortBreak' || currentMode === 'longBreak') && settings.autoStartPomodoros) {
+            initTimer('pomodoro');
+            startTimer();
+          } else {
+            isRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+          }
+          
+          return;
+        }
+        
+        timeLeft--;
+        updateDisplay();
+      }, 1000);
+    }
+    
+    // Pause timer
+    function pauseTimer() {
+      clearInterval(timer);
+      isRunning = false;
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+    }
+    
+    // Reset timer
+    function resetTimer() {
+      initTimer(currentMode);
+    }
+    
+    // Event listeners
+    pomodoroBtn.addEventListener('click', () => initTimer('pomodoro'));
+    shortBreakBtn.addEventListener('click', () => initTimer('shortBreak'));
+    longBreakBtn.addEventListener('click', () => initTimer('longBreak'));
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    resetBtn.addEventListener('click', resetTimer);
+    
+    // Initialize with Pomodoro mode
+    initTimer('pomodoro');
+  </script>
+</body>
+</html>

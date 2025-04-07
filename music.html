@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <title>NagaReminder - Music</title>
+  <style>
+    body {
+      background-image: url('assets/Music.png');
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .now-playing {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #333;
+    }
+    
+    .progress-container {
+      margin: 20px 0;
+      height: 10px;
+      background-color: #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background-color: #9966cc;
+      border-radius: 5px;
+      transition: width 0.1s linear;
+    }
+    
+    .volume-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    
+    .volume-container i {
+      margin-right: 10px;
+      color: #333;
+    }
+    
+    .volume-slider {
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MUSIC</h1>
+    
+    <div class="music-container">
+      <h2>Lo-Fi Study Music</h2>
+      
+      <div id="now-playing" class="now-playing">Select a track to begin</div>
+      
+      <div id="progress-container" class="progress-container">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+      
+      <div class="music-controls">
+        <button id="prev-btn" class="music-control-btn">
+          <i class="fas fa-step-backward"></i>
+        </button>
+        <button id="play-btn" class="music-control-btn">
+          <i class="fas fa-play"></i>
+        </button>
+        <button id="pause-btn" class="music-control-btn" disabled>
+          <i class="fas fa-pause"></i>
+        </button>
+        <button id="next-btn" class="music-control-btn">
+          <i class="fas fa-step-forward"></i>
+        </button>
+      </div>
+      
+      <div class="volume-container">
+        <i class="fas fa-volume-up"></i>
+        <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.1" value="0.7">
+      </div>
+      
+      <ul id="music-list" class="music-list">
+        <li class="music-item" data-src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3">
+          Lo-Fi Beats to Study To
+        </li>
+        <li class="music-item" data-src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3">
+          Anime Piano Melodies
+        </li>
+        <li class="music-item" data-src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3">
+          Relaxing Japanese Music
+        </li>
+        <li class="music-item" data-src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3">
+          Gaming Background Music
+        </li>
+        <li class="music-item" data-src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3">
+          Focus & Concentration Mix
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // DOM elements
+    const musicList = document.getElementById('music-list');
+    const nowPlaying = document.getElementById('now-playing');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const playBtn = document.getElementById('play-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const volumeSlider = document.getElementById('volume-slider');
+    
+    // Audio element
+    const audio = new Audio();
+    
+    // Track index
+    let currentTrackIndex = 0;
+    
+    // Music tracks
+    const tracks = Array.from(musicList.querySelectorAll('.music-item'));
+    
+    // Play selected track
+    function playTrack(index) {
+      // Reset previous track highlight
+      tracks.forEach(track => track.classList.remove('playing'));
+      
+      currentTrackIndex = index;
+      const track = tracks[index];
+      track.classList.add('playing');
+      
+      audio.src = track.dataset.src;
+      audio.play();
+      
+      nowPlaying.textContent = `Now playing: ${track.textContent.trim()}`;
+      playBtn.disabled = true;
+      pauseBtn.disabled = false;
+    }
+    
+    // Play next track
+    function playNext() {
+      const nextIndex = (currentTrackIndex + 1) % tracks.length;
+      playTrack(nextIndex);
+    }
+    
+    // Play previous track
+    function playPrevious() {
+      const prevIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+      playTrack(prevIndex);
+    }
+    
+    // Update progress bar
+    function updateProgress() {
+      if (audio.duration) {
+        const progressPercent = (audio.currentTime / audio.duration) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+      }
+    }
+    
+    // Set progress when clicked
+    function setProgress(e) {
+      const width = this.clientWidth;
+      const clickX = e.offsetX;
+      const duration = audio.duration;
+      
+      audio.currentTime = (clickX / width) * duration;
+    }
+    
+    // Event listeners
+    tracks.forEach((track, index) => {
+      track.addEventListener('click', () => playTrack(index));
+    });
+    
+    playBtn.addEventListener('click', () => {
+      if (audio.src) {
+        audio.play();
+        playBtn.disabled = true;
+        pauseBtn.disabled = false;
+      } else if (tracks.length > 0) {
+        playTrack(0);
+      }
+    });
+    
+    pauseBtn.addEventListener('click', () => {
+      audio.pause();
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
+    });
+    
+    prevBtn.addEventListener('click', playPrevious);
+    nextBtn.addEventListener('click', playNext);
+    
+    volumeSlider.addEventListener('input', () => {
+      audio.volume = volumeSlider.value;
+    });
+    
+    progressContainer.addEventListener('click', setProgress);
+    
+    audio.addEventListener('timeupdate', updateProgress);
+    
+    audio.addEventListener('ended', playNext);
+    
+    // Set initial volume
+    audio.volume = volumeSlider.value;
+  </script>
+</body>
+</html> 
