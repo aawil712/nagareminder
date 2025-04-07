@@ -18,7 +18,7 @@ function navigateTo(destination) {
 // Create back button for all pages except welcome
 function createBackButton() {
   const pagePath = window.location.pathname.toLowerCase();
-  if (!pagePath.includes('welcome.html')) {
+  if (!pagePath.includes('/views/welcome.html')) {
     const backButton = document.createElement('button');
     backButton.className = 'back-btn pixel-btn pink-btn';
     backButton.innerHTML = '&larr; BACK';

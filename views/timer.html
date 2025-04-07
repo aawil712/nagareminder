@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/animations.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <title>NagaReminder - Timer</title>
   <style>
     body {
-      background-image: url('assets/timer.jpg');
+      background-image: url('../assets/timer.jpg');
       background-size: cover;
       background-position: center;
       height: 600px;
@@ -141,9 +141,12 @@
       top: 0;
       left: -15px;
     }
+   
   </style>
 </head>
 <body>
+  <button class="back-btn pixel-btn pink-btn" onclick="window.electronAPI.navigate('welcome')">&larr; BACK</button>
+  
   <div class="container">
     <h1>START TIMER?</h1>
     
@@ -167,11 +170,7 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
   <script>
-    const { ipcRenderer } = require('electron');
-    const { createNotificationSound } = require('./assets/notification.js');
-    
     // DOM elements
     const timerDisplay = document.getElementById('timer-display');
     const pomodoroBtn = document.getElementById('pomodoro-btn');
@@ -188,7 +187,7 @@
     let currentMode = 'pomodoro';
     
     // Get settings from storage
-    const settings = ipcRenderer.sendSync('get-timer-settings');
+    const settings = window.electronAPI.getTimerSettings();
     
     // Mode durations in minutes
     const modes = {
@@ -245,29 +244,30 @@
           // Remove active animation class
           timerDisplay.classList.remove('timer-active');
           
-          // Auto-start next session if enabled
+          // Reset controls
+          isRunning = false;
+          startBtn.disabled = false;
+          pauseBtn.disabled = true;
+          
+          // Auto-start next timer if enabled
           if (currentMode === 'pomodoro' && settings.autoStartBreaks) {
             initTimer('shortBreak');
             startTimer();
-          } else if ((currentMode === 'shortBreak' || currentMode === 'longBreak') && settings.autoStartPomodoros) {
+          } else if (currentMode === 'shortBreak' && settings.autoStartPomodoros) {
             initTimer('pomodoro');
             startTimer();
-          } else {
-            isRunning = false;
-            startBtn.disabled = false;
-            pauseBtn.disabled = true;
           }
-          
-          return;
+        } else {
+          timeLeft--;
+          updateDisplay();
         }
-        
-        timeLeft--;
-        updateDisplay();
       }, 1000);
     }
     
     // Pause timer
     function pauseTimer() {
+      if (!isRunning) return;
+      
       clearInterval(timer);
       isRunning = false;
       startBtn.disabled = false;
@@ -279,10 +279,8 @@
     
     // Reset timer
     function resetTimer() {
+      clearInterval(timer);
       initTimer(currentMode);
-      
-      // Remove active animation class
-      timerDisplay.classList.remove('timer-active');
     }
     
     // Event listeners
@@ -293,7 +291,7 @@
     pauseBtn.addEventListener('click', pauseTimer);
     resetBtn.addEventListener('click', resetTimer);
     
-    // Initialize with Pomodoro mode
+    // Initialize timer
     initTimer('pomodoro');
   </script>
 </body>

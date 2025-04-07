@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/animations.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <title>NagaReminder - Settings</title>
   <style>
     body {
-      background-image: url('assets/settings.gif');
+      background-image: url('../assets/settings.gif');
       background-size: cover;
       background-position: center;
       height: 600px;
@@ -80,6 +80,8 @@
   </style>
 </head>
 <body>
+  <button class="back-btn pixel-btn pink-btn" onclick="window.electronAPI.navigate('welcome')">&larr; BACK</button>
+  
   <div class="container">
     <h1>SETTINGS</h1>
     
@@ -123,10 +125,7 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
   <script>
-    const { ipcRenderer } = require('electron');
-    
     // DOM elements
     const settingsForm = document.getElementById('settings-form');
     const pomodoroInput = document.getElementById('pomodoro');
@@ -136,7 +135,7 @@
     const autoStartPomodorosCheck = document.getElementById('auto-start-pomodoros');
     
     // Load settings from storage
-    const settings = ipcRenderer.sendSync('get-timer-settings');
+    const settings = window.electronAPI.getTimerSettings();
     
     // Set form values from settings
     pomodoroInput.value = settings.pomodoro;
@@ -157,7 +156,7 @@
         autoStartPomodoros: autoStartPomodorosCheck.checked
       };
       
-      ipcRenderer.send('save-timer-settings', newSettings);
+      window.electronAPI.saveTimerSettings(newSettings);
       
       // Show confirmation (could be improved with a proper toast notification)
       alert('Settings saved!');

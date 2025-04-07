@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/animations.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <title>NagaReminder - To-Do List</title>
   <style>
     body {
-      background-image: url('assets/todolist.jpg');
+      background-image: url('../assets/todolist.jpg');
       background-size: cover;
       background-position: center;
       height: 600px;
@@ -106,6 +106,8 @@
   </style>
 </head>
 <body>
+  <button class="back-btn pixel-btn pink-btn" onclick="window.electronAPI.navigate('welcome')">&larr; BACK</button>
+  
   <div class="container">
     <h1>TO-DO LIST</h1>
     
@@ -121,17 +123,14 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
   <script>
-    const { ipcRenderer } = require('electron');
-    
     // DOM elements
     const todoForm = document.getElementById('todo-form');
     const todoInput = document.getElementById('todo-input');
     const todoList = document.getElementById('todo-list');
     
     // Get todos from storage
-    let todos = ipcRenderer.sendSync('get-todos');
+    let todos = window.electronAPI.getTodos();
     
     // Render todos
     function renderTodos() {
@@ -187,7 +186,7 @@
     
     // Save todos to storage
     function saveTodos() {
-      ipcRenderer.send('save-todos', todos);
+      window.electronAPI.saveTodos(todos);
     }
     
     // Event listeners

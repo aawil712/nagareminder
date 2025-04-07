@@ -16,12 +16,13 @@ function createSplashWindow() {
     alwaysOnTop: true,
     resizable: false,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
-  splashWindow.loadFile('splash.html');
+  splashWindow.loadFile(path.join(__dirname, '../views/splash.html'));
   
   splashWindow.on('closed', () => {
     splashWindow = null;
@@ -39,13 +40,14 @@ function createMainWindow() {
     show: false,
     resizable: false,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     },
-    icon: path.join(__dirname, 'assets/Logo.png')
+    icon: path.join(__dirname, '../assets/Logo.png')
   });
 
-  mainWindow.loadFile('welcome.html');
+  mainWindow.loadFile(path.join(__dirname, '../views/welcome.html'));
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -83,7 +85,7 @@ app.on('activate', () => {
 
 // IPC handlers for navigation
 ipcMain.on('navigate', (event, destination) => {
-  mainWindow.loadFile(`${destination}.html`);
+  mainWindow.loadFile(path.join(__dirname, `../views/${destination}.html`));
 });
 
 // IPC handlers for todos

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/animations.css">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <title>NagaReminder - Music</title>
   <style>
     body {
-      background-image: url('assets/Music.png');
+      background-image: url('../assets/Music.png');
       background-size: cover;
       background-position: center;
       height: 600px;
@@ -141,6 +141,8 @@
   </style>
 </head>
 <body>
+  <button class="back-btn pixel-btn pink-btn" onclick="window.electronAPI.navigate('welcome')">&larr; BACK</button>
+  
   <div class="container">
     <h1>MUSIC</h1>
     
@@ -193,7 +195,6 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
   <script>
     // DOM elements
     const musicList = document.getElementById('music-list');
@@ -252,13 +253,17 @@
       }
     }
     
-    // Set progress when clicked
+    // Set progress bar position
     function setProgress(e) {
       const width = this.clientWidth;
       const clickX = e.offsetX;
       const duration = audio.duration;
-      
       audio.currentTime = (clickX / width) * duration;
+    }
+    
+    // Set volume
+    function setVolume() {
+      audio.volume = volumeSlider.value;
     }
     
     // Event listeners
@@ -267,13 +272,9 @@
     });
     
     playBtn.addEventListener('click', () => {
-      if (audio.src) {
-        audio.play();
-        playBtn.disabled = true;
-        pauseBtn.disabled = false;
-      } else if (tracks.length > 0) {
-        playTrack(0);
-      }
+      audio.play();
+      playBtn.disabled = true;
+      pauseBtn.disabled = false;
     });
     
     pauseBtn.addEventListener('click', () => {
@@ -284,19 +285,14 @@
     
     prevBtn.addEventListener('click', playPrevious);
     nextBtn.addEventListener('click', playNext);
-    
-    volumeSlider.addEventListener('input', () => {
-      audio.volume = volumeSlider.value;
-    });
-    
     progressContainer.addEventListener('click', setProgress);
+    volumeSlider.addEventListener('input', setVolume);
     
+    // Update progress bar
     audio.addEventListener('timeupdate', updateProgress);
     
+    // Play next track when current track ends
     audio.addEventListener('ended', playNext);
-    
-    // Set initial volume
-    audio.volume = volumeSlider.value;
   </script>
 </body>
 </html>
