@@ -515,6 +515,7 @@ h2 {
 }
 
 .back-btn {
+  scale: 75%;
   position: fixed !important;
   top: 10px !important;
   left: 10px !important;

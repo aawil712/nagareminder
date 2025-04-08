@@ -54,15 +54,13 @@ npm run build
 
 This will create distributable packages in the `dist` directory.
 
-## Technology Stack
+## Tech Stack
 
 - Electron - Desktop application framework
 - HTML/CSS/JavaScript - Frontend
 - electron-store - Data persistence
 
-## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
