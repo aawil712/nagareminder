@@ -19,103 +19,123 @@
   <div class="container">
     <h1>MUSIC</h1>
     
-    <div class="music-container">
-      <h2>Lo-Fi Study Music</h2>
-      
-      <div id="now-playing" class="now-playing">Select a track to begin</div>
-      
-      <div id="progress-container" class="progress-container">
-        <div id="progress-bar" class="progress-bar"></div>
+    <div class="music-container pixel-border">
+      <div class="scanlines"></div>
+      <div class="album-art pixel-border">
+        <img src="../assets/besideyoucover.jpg" alt="Album Cover" id="album-cover">
       </div>
-      
+      <div class="track-info">
+        <div id="now-playing" class="now-playing">Keshi - Beside you</div>
+      </div>
+      <div class="time-info">
+        <span class="current-time">0:00</span>
+        <div id="progress-container" class="progress-container">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        <span class="total-time">0:00</span>
+      </div>
       <div class="music-controls">
-        <button id="prev-btn" class="music-control-btn">
+        <button id="prev-btn" class="music-control-btn pixel-btn">
           <i class="fas fa-step-backward"></i>
         </button>
-        <button id="play-btn" class="music-control-btn">
+        <button id="play-btn" class="music-control-btn pixel-btn">
           <i class="fas fa-play"></i>
         </button>
-        <button id="pause-btn" class="music-control-btn" disabled>
-          <i class="fas fa-pause"></i>
-        </button>
-        <button id="next-btn" class="music-control-btn">
+        <button id="next-btn" class="music-control-btn pixel-btn">
           <i class="fas fa-step-forward"></i>
         </button>
       </div>
-      
       <div class="volume-container">
         <i class="fas fa-volume-up"></i>
-        <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.1" value="0.7">
+        <input type="range" id="volume-slider" class="volume-slider pixel-slider" min="0" max="1" step="0.1" value="0.7">
       </div>
-      
-      <ul id="music-list" class="music-list">
-        <li class="music-item" data-src="../assets/Besideyou.mp3">
-          Keshi - Beside you
-        </li>
-        <li class="music-item" data-src="../assets/LikeThat.mp3">
-          Keshi - Like that
-        </li>
-        <li class="music-item" data-src="../assets/Whispers.mp3">
-          MetaMask - Whispers of the wind
-        </li>
-        <li class="music-item" data-src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3">
-          Gaming Background Music
-        </li>
-        <li class="music-item" data-src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3">
-          Focus & Concentration Mix
-        </li>
-      </ul>
+      <div class="song-list">
+        <div class="song-dot active" data-song="Besideyou.mp3" data-cover="besideyoucover.jpg" data-title="Keshi - Beside you"></div>
+        <div class="song-dot" data-song="LikeThat.mp3" data-cover="besideyoucover.jpg" data-title="Keshi - Like that"></div>
+        <div class="song-dot" data-song="Whispers.mp3" data-cover="besideyoucover.jpg" data-title="MetaMask - Whispers of the wind"></div>
+        <div class="song-dot" data-song="Per.mp3" data-cover="besideyoucover.jpg" data-title="Piero Piccioni - Per Noi Due Soli"></div>
+      </div>
     </div>
   </div>
 
   <script>
     // DOM elements
-    const musicList = document.getElementById('music-list');
     const nowPlaying = document.getElementById('now-playing');
     const progressContainer = document.getElementById('progress-container');
     const progressBar = document.getElementById('progress-bar');
     const playBtn = document.getElementById('play-btn');
-    const pauseBtn = document.getElementById('pause-btn');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const volumeSlider = document.getElementById('volume-slider');
+    const currentTimeEl = document.querySelector('.current-time');
+    const totalTimeEl = document.querySelector('.total-time');
+    const albumCover = document.getElementById('album-cover');
+    const songDots = document.querySelectorAll('.song-dot');
     
     // Audio element
-    const audio = new Audio();
+    const audio = new Audio('../assets/Besideyou.mp3');
+    let isPlaying = false;
+    let currentSongIndex = 0;
     
-    // Track index
-    let currentTrackIndex = 0;
+    // Format time in MM:SS
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
     
-    // Music tracks
-    const tracks = Array.from(musicList.querySelectorAll('.music-item'));
+    // Update time displays
+    function updateTimeDisplay() {
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+      totalTimeEl.textContent = formatTime(audio.duration || 0);
+    }
     
-    // Play selected track
-    function playTrack(index) {
-      // Reset previous track highlight
-      tracks.forEach(track => track.classList.remove('playing'));
+    // Play selected song
+    function playSong(index) {
+      const songDot = songDots[index];
       
-      currentTrackIndex = index;
-      const track = tracks[index];
-      track.classList.add('playing');
+      // Update active dot
+      songDots.forEach(dot => dot.classList.remove('active'));
+      songDot.classList.add('active');
       
-      audio.src = track.dataset.src;
+      // Update audio source
+      audio.src = `../assets/${songDot.dataset.song}`;
+      
+      // Update album cover
+      albumCover.src = `../assets/${songDot.dataset.cover}`;
+      
+      // Update now playing text
+      nowPlaying.textContent = songDot.dataset.title;
+      
+      // Reset play button and start playing
+      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
       audio.play();
-      
-      nowPlaying.textContent = `Now playing: ${track.textContent.trim()}`;
-      playBtn.disabled = true;
-      pauseBtn.disabled = false;
+      isPlaying = true;
+      currentSongIndex = index;
     }
     
-    // Play next track
+    // Toggle play/pause
+    function togglePlay() {
+      if (isPlaying) {
+        audio.pause();
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+      } else {
+        audio.play();
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      }
+      isPlaying = !isPlaying;
+    }
+    
+    // Play next song
     function playNext() {
-      const nextIndex = (currentTrackIndex + 1) % tracks.length;
-      playTrack(nextIndex);
+      const nextIndex = (currentSongIndex + 1) % songDots.length;
+      playSong(nextIndex);
     }
     
-    // Play previous track
+    // Play previous song
     function playPrevious() {
-      const prevIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-      playTrack(prevIndex);
+      const prevIndex = (currentSongIndex - 1 + songDots.length) % songDots.length;
+      playSong(prevIndex);
     }
     
     // Update progress bar
@@ -123,6 +143,7 @@
       if (audio.duration) {
         const progressPercent = (audio.currentTime / audio.duration) * 100;
         progressBar.style.width = `${progressPercent}%`;
+        updateTimeDisplay();
       }
     }
     
@@ -140,31 +161,20 @@
     }
     
     // Event listeners
-    tracks.forEach((track, index) => {
-      track.addEventListener('click', () => playTrack(index));
-    });
-    
-    playBtn.addEventListener('click', () => {
-      audio.play();
-      playBtn.disabled = true;
-      pauseBtn.disabled = false;
-    });
-    
-    pauseBtn.addEventListener('click', () => {
-      audio.pause();
-      playBtn.disabled = false;
-      pauseBtn.disabled = true;
-    });
-    
+    playBtn.addEventListener('click', togglePlay);
     prevBtn.addEventListener('click', playPrevious);
     nextBtn.addEventListener('click', playNext);
     progressContainer.addEventListener('click', setProgress);
     volumeSlider.addEventListener('input', setVolume);
     
-    // Update progress bar
-    audio.addEventListener('timeupdate', updateProgress);
+    // Song dot event listeners
+    songDots.forEach((dot, index) => {
+      dot.addEventListener('click', () => playSong(index));
+    });
     
-    // Play next track when current track ends
+    // Audio event listeners
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('loadedmetadata', updateTimeDisplay);
     audio.addEventListener('ended', playNext);
   </script>
 </body>
