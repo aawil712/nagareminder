@@ -1,4 +1,4 @@
-# NagaReminder
+# NagaReminder WIP
 
 An anime-inspired desktop productivity app for students featuring a to-do list and Pomodoro timer.
 
