@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pixel { fill: #FFB6C1; }
+    .pixel-dark { fill: #FF69B4; }
+    .pixel-highlight { fill: #FFF; }
+  </style>
+  <g transform="translate(2,2) scale(0.875)">
+    <!-- Outer border -->
+    <path class="pixel-dark" d="M4,4 h24 v24 h-24 z"/>
+    <!-- Inner light pink -->
+    <path class="pixel" d="M6,6 h20 v20 h-20 z"/>
+    <!-- Heart shape -->
+    <path class="pixel-dark" d="M14,12 h4 v2 h-4 z M12,14 h8 v2 h-8 z M10,16 h12 v2 h-12 z M12,18 h8 v2 h-8 z M14,20 h4 v2 h-4 z"/>
+    <!-- Highlight pixels -->
+    <path class="pixel-highlight" d="M6,6 h2 v2 h-2 z M8,6 h2 v2 h-2 z"/>
+  </g>
+</svg> 

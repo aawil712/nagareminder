@@ -32,8 +32,56 @@ body {
   
   .pixel-btn {
     font-size: 14px;
-    padding: 15px 20px;
-    min-width: 120px;
+    padding: 12px 20px;
+    min-width: 180px;
+    background-color: #ff69b4;
+    color: white;
+    border: 3px solid #ff4aa6;
+    border-radius: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    box-shadow: 4px 4px 0 rgba(138, 43, 226, 0.3);
+    transition: all 0.2s;
+    image-rendering: pixelated;
+  }
+  
+  .pixel-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 rgba(138, 43, 226, 0.4);
+  }
+  
+  .pixel-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 rgba(138, 43, 226, 0.2);
+  }
+  
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: pixelated;
+    flex-shrink: 0;
+  }
+  
+  .todo-icon {
+    background-image: url('../assets/todo-icon.png');
+  }
+  
+  .timer-icon {
+    background-image: url('../assets/timer-icon.png');
+  }
+  
+  .music-icon {
+    background-image: url('../assets/music-icon.png');
+  }
+  
+  .settings-icon {
+    background-image: url('../assets/pixel-bin.png');
   }
   
   h1 {

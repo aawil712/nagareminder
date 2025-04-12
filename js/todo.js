@@ -26,7 +26,7 @@ function renderTodos() {
     
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
-    deleteBtn.textContent = 'DELETE';
+    deleteBtn.setAttribute('aria-label', 'Delete task');
     deleteBtn.addEventListener('click', () => deleteTodo(index));
     
     li.appendChild(checkbox);

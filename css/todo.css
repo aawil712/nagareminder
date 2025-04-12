@@ -104,14 +104,30 @@ h1 {
 }
 
 .delete-btn {
-  background-color: #ff6666;
-  color: white;
+  background-color: transparent;
   border: none;
-  border-radius: 3px;
-  padding: 8px 12px;
   cursor: pointer;
-  font-size: 12px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   margin-left: 10px;
+  background-image: url('../assets/pixel-bin.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.2s;
+  image-rendering: pixelated;
+  filter: drop-shadow(2px 2px 0 rgba(138, 43, 226, 0.3));
+}
+
+.delete-btn:hover {
+  transform: scale(1.2);
+  filter: drop-shadow(3px 3px 0 rgba(138, 43, 226, 0.4));
+}
+
+.delete-btn:active {
+  transform: scale(0.9);
+  filter: drop-shadow(1px 1px 0 rgba(138, 43, 226, 0.2));
 }
 
 .completed {

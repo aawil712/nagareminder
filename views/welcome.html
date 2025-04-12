@@ -21,10 +21,22 @@
       <img src="../assets/nagatoro.png" class="welcome-mascot" alt="Welcome mascot">
     </div>
     <div class="welcome-buttons">
-      <button class="pixel-btn" onclick="window.electronAPI.navigate('todo')">TO-DO LIST</button>
-      <button class="pixel-btn" onclick="window.electronAPI.navigate('timer')">TIMER</button>
-      <button class="pixel-btn" onclick="window.electronAPI.navigate('music')">MUSIC</button>
-      <button class="pixel-btn" onclick="window.electronAPI.navigate('settings')">SETTINGS</button>
+      <button class="pixel-btn" onclick="window.electronAPI.navigate('todo')">
+        <div class="btn-icon todo-icon"></div>
+        TO-DO LIST
+      </button>
+      <button class="pixel-btn" onclick="window.electronAPI.navigate('timer')">
+        <div class="btn-icon timer-icon"></div>
+        TIMER
+      </button>
+      <button class="pixel-btn" onclick="window.electronAPI.navigate('music')">
+        <div class="btn-icon music-icon"></div>
+        MUSIC
+      </button>
+      <button class="pixel-btn" onclick="window.electronAPI.navigate('settings')">
+        <div class="btn-icon settings-icon"></div>
+        SETTINGS
+      </button>
     </div>
     
     
