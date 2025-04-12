@@ -2,119 +2,124 @@ body {
     background-image: url('../assets/Music.png');
     background-size: cover;
     background-position: center;
-    height: 600px;
+    min-height: 100vh;
     width: 600px;
+    margin: 0 auto;
     padding: 0;
-    overflow: hidden;
     display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .container {
-    padding: 20px 20px 20px 20px;
-    height: 600px;
-  }
-  
-  h1 {
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h1 {
     font-size: 28px;
     margin-bottom: 20px;
     text-shadow: 3px 3px 0px #783c8e;
-  }
-  
-  h2 {
+}
+
+h2 {
     font-size: 20px;
     margin-bottom: 15px;
-  }
-  
-  .music-container {
-    position: absolute;
+}
+
+.music-container {
+    flex: 1;
     background-color: rgba(255, 192, 203, 0.85);
     border: 6px solid #ff69b4;
     border-radius: 0;
     box-shadow: 8px 8px 0 rgba(138, 43, 226, 0.5);
-    width: 400px;
-    height: 550px;
-    image-rendering: pixelated;
-    top: 53%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: 75%;
+    max-width: 500px;
+    margin: 0px auto;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
-  }
-  
-  .album-art {
-    width: 300px;
-    height: 300px;
-    background-color: #4CAF50;
-    border: 4px solid #45a049;
-    margin-bottom: 15px;
+    gap: 7px;
+    image-rendering: pixelated;
+    min-height: 300px;
+    max-height: 500px;
+}
+
+.album-art {
+    width: 150px;
+    height: 150px;
+    background-color: #a74caf;
+    border: 4px solid #ff14c4;
+    margin: 20px 0;
     overflow: hidden;
-  }
-  
-  .album-art img {
+}
+
+.album-art img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     image-rendering: pixelated;
-  }
-  
-  .track-info {
+}
+
+.track-info {
     width: 100%;
     text-align: center;
-  }
-  
-  .now-playing {
+}
+
+.now-playing {
     margin: 0;
     font-size: 14px;
     padding: 8px;
     background-color: rgba(204, 102, 162, 0.2);
     border-radius: 5px;
     color: #333;
-  }
-  
-  .time-info {
+}
+
+.time-info {
     width: 100%;
     display: flex;
     align-items: center;
     gap: 10px;
     margin: 5px 0;
-  }
-  
-  .current-time,
-  .total-time {
+}
+
+.current-time,
+.total-time {
     font-size: 10px;
     color: #333;
     font-family: 'Press Start 2P', cursive;
-  }
-  
-  .progress-container {
+}
+
+.progress-container {
     flex: 1;
     height: 6px;
     background-color: #ddd;
     border: 2px solid #ff69b4;
     cursor: pointer;
     margin: 0;
-  }
-  
-  .progress-bar {
+}
+
+.progress-bar {
     height: 100%;
     background-color: #ff69b4;
     transition: width 0.1s linear;
-  }
-  
-  .music-controls {
+}
+
+.music-controls {
     display: flex;
     gap: 15px;
     margin: 5px 0;
-  }
-  
-  .music-control-btn {
-    width: 35px;
-    height: 35px;
+}
+
+.music-control-btn {
+    width: 40px;
+    height: 40px;
     padding: 0;
     display: flex;
     align-items: center;
@@ -122,109 +127,117 @@ body {
     background-color: #ff69b4;
     border: 3px solid #ff4aa6;
     color: white;
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.2s;
-  }
-  
-  .music-control-btn:hover {
-    transform: scale(1.1);
-    background-color: #ff4aa6;
-  }
-  
-  .volume-container {
+    box-shadow: 4px 4px 0 rgba(138, 43, 226, 0.3);
+}
+
+.music-control-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 rgba(138, 43, 226, 0.3);
+}
+
+.music-control-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 rgba(138, 43, 226, 0.3);
+}
+
+.volume-container {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     margin: 5px 0;
-  }
-  
-  .volume-container i {
+}
+
+.volume-container i {
     color: #333;
     font-size: 16px;
-  }
-  
-  .pixel-slider {
+}
+
+.pixel-slider {
     -webkit-appearance: none;
     height: 6px;
     background-color: #ddd;
     border: 2px solid #ff69b4;
     outline: none;
     cursor: pointer;
-  }
-  
-  .pixel-slider::-webkit-slider-thumb {
+}
+
+.pixel-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 16px;
     height: 16px;
     background-color: #ff69b4;
     border: 2px solid #ff4aa6;
     cursor: pointer;
-  }
-  
-  .music-list {
+}
+
+.music-list {
     width: 100%;
-    max-height: 100px;
+    max-height: 200px;
     overflow-y: auto;
-    margin-top: 10px;
+    margin-top: 20px;
     border: 3px solid #ff69b4;
-    padding: 5px;
-  }
-  
-  .music-item {
-    padding: 8px;
-    font-size: 12px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.music-item {
+    padding: 12px;
+    font-size: 14px;
     border-bottom: 2px solid #ff69b4;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
     color: #333;
-  }
-  
-  .music-item:hover {
+    margin: 5px 0;
+}
+
+.music-item:hover {
     background-color: rgba(255, 105, 180, 0.2);
-  }
-  
-  .music-item.playing {
+}
+
+.music-item.playing {
     background-color: rgba(255, 105, 180, 0.3);
     border-left: 4px solid #ff69b4;
     padding-left: 12px;
-  }
-  
-  /* Scrollbar styling */
-  .music-list::-webkit-scrollbar {
+}
+
+/* Scrollbar styling */
+.music-list::-webkit-scrollbar {
     width: 8px;
-  }
-  
-  .music-list::-webkit-scrollbar-track {
+}
+
+.music-list::-webkit-scrollbar-track {
     background: #ddd;
     border: 2px solid #ff69b4;
-  }
-  
-  .music-list::-webkit-scrollbar-thumb {
+}
+
+.music-list::-webkit-scrollbar-thumb {
     background: #ff69b4;
     border: 2px solid #ff4aa6;
-  }
-  
-  .song-list {
+}
+
+.song-list {
     width: 100%;
     display: flex;
     justify-content: center;
     gap: 10px;
     margin-top: 5px;
-  }
-  
-  .song-dot {
+}
+
+.song-dot {
     width: 12px;
     height: 12px;
     background-color: #ff69b4;
     border: 2px solid #ff4aa6;
     cursor: pointer;
     transition: all 0.2s;
-  }
-  
-  .song-dot.active {
+}
+
+.song-dot.active {
     background-color: #ff4aa6;
     transform: scale(1.2);
-  }
+}

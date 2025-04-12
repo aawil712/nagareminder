@@ -2,101 +2,119 @@ body {
     background-image: url('../assets/timer.jpg');
     background-size: cover;
     background-position: center;
-    height: 600px;
+    min-height: 100vh;
     width: 600px;
-    margin: auto;
-    padding: 10;
-    overflow: hidden;
-  }
-  
-  h1 {
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h1 {
     font-size: 28px;
     margin-bottom: 30px;
     color: #FFD700;
     text-shadow: 3px 3px 0px #783c8e;
-  }
-  
-  .timer-container {
+}
+
+.timer-container {
     background-color: rgba(255, 192, 203, 0.85);
     border: 6px solid #ff69b4;
     border-radius: 0;
     box-shadow: 8px 8px 0 rgba(138, 43, 226, 0.5);
-    width: 500px;
-    height: 400px;
+    width: 90%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     image-rendering: pixelated;
-  }
-  
-  .timer-display {
+}
+
+.timer-display {
     font-size: 64px;
     margin: auto 0;
     color: #fff;
     text-shadow: 4px 4px 0 #8a2be2;
     text-align: center;
     letter-spacing: 5px;
-  }
-  
-  .mode-buttons {
+}
+
+.mode-buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     margin-bottom: 25px;
-  }
-  
-  .mode-btn {
+}
+
+.mode-btn {
     background-color: #fff;
     color: #ff69b4;
     border: 3px solid #ff69b4;
     border-radius: 0;
-    font-size: 12px;
-    padding: 10px;
+    font-size: 14px;
+    padding: 12px;
     cursor: pointer;
     image-rendering: pixelated;
-  }
-  
-  .mode-btn.active {
+    box-shadow: 4px 4px 0 rgba(138, 43, 226, 0.3);
+    transition: all 0.2s;
+}
+
+.mode-btn.active {
     background-color: #ff69b4;
     color: #fff;
     border: 3px solid #8a2be2;
-  }
-  
-  .timer-buttons {
+}
+
+.timer-buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     margin-top: 30px;
-  }
-  
-  .pixel-btn {
+}
+
+.pixel-btn {
     background-color: #fff;
     color: #ff69b4;
     border: 4px solid #ff69b4;
-    box-shadow: 4px 4px 0 #8a2be2;
+    box-shadow: 4px 4px 0 rgba(138, 43, 226, 0.3);
     padding: 12px 10px;
     font-size: 16px;
     border-radius: 0;
     cursor: pointer;
     image-rendering: pixelated;
     position: relative;
-    transition: all 0.1s;
-  }
-  
-  .pixel-btn:hover {
-    background-color: #ffecf1;
+    transition: all 0.2s;
+}
+
+.pixel-btn:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 #8a2be2;
-  }
-  
-  .pixel-btn:active {
-    transform: translate(3px, 3px);
-    box-shadow: 1px 1px 0 #8a2be2;
-  }
-  
-  .pixel-btn:disabled {
+    box-shadow: 6px 6px 0 rgba(138, 43, 226, 0.3);
+}
+
+.pixel-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 rgba(138, 43, 226, 0.3);
+}
+
+.pixel-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-  }
-  
-  .heart-icon {
+}
+
+.heart-icon {
     display: inline-block;
     width: 30px;
     height: 30px;
@@ -104,25 +122,25 @@ body {
     position: relative;
     transform: rotate(45deg);
     margin: 20px auto;
-  }
-  
-  .heart-icon:before,
-  .heart-icon:after {
+}
+
+.heart-icon:before,
+.heart-icon:after {
     content: "";
     width: 30px;
     height: 30px;
     background-color: #ff69b4;
     border-radius: 50%;
     position: absolute;
-  }
-  
-  .heart-icon:before {
+}
+
+.heart-icon:before {
     top: -15px;
     left: 0;
-  }
-  
-  .heart-icon:after {
+}
+
+.heart-icon:after {
     top: 0;
     left: -15px;
-  }
+}
  
