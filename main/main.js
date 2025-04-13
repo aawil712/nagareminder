@@ -39,6 +39,7 @@ function createMainWindow() {
     maxHeight: 600,
     show: false,
     resizable: false,
+    autoHideMenuBar: true, // Hides the menu bar
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
