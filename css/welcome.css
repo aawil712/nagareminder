@@ -67,7 +67,8 @@ body {
     image-rendering: pixelated;
     flex-shrink: 0;
   }
-  
+
+ 
   .todo-icon {
     background-image: url('../assets/todo-icon.png');
   }

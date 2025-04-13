@@ -32,7 +32,7 @@ h1 {
   font-size: 28px;
   margin: 20px 0;
   text-align: center;
-  padding-top: 20px;
+  padding-top: 5px;
 }
 
 .todo-container {
@@ -53,13 +53,13 @@ h1 {
 
 .todo-form {
   display: flex;
-  padding: 20px;
+  padding: 10px;
   gap: 10px;
 }
 
 .todo-input {
   flex: 1;
-  padding: 12px;
+  padding: 5px;
   border: 2px solid #9966cc;
   border-radius: 5px 0 0 5px;
   font-size: 16px;
