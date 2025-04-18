@@ -64,9 +64,9 @@ function startTimer() {
   timer = setInterval(() => {
     if (timeLeft <= 0) {
       clearInterval(timer);
-      
       // Play notification sound using Web Audio API
-      createNotificationSound();
+      document.getElementById('alarm-sound').play();
+
       
       // Remove active animation class
       timerDisplay.classList.remove('timer-active');
